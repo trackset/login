@@ -1,0 +1,27 @@
+✓✓✓ SAVED HTML TO: C:\Users\Administrator\Desktop\28-09\src\captcha_debug_1759612364197.html
+✓✓✓ SAVING LOGS TO: C:\Users\Administrator\Desktop\28-09\src\captcha_log_1759612364197.txt
+
+=== STEP 1: LoginSolver.solve ===
+✗✗✗ LoginSolver.solve FAILED: Cannot read properties of undefined (reading 'split')
+✗✗✗ Stack: TypeError: Cannot read properties of undefined (reading 'split')
+    at getVisibilityOrders (C:\Users\Administrator\Desktop\28-09\src\utils\utils.js:958:10)
+    at LoginSolver.solve (C:\Users\Administrator\Desktop\28-09\src\utils\utils.js:1032:28)
+    at LoginMorocco.page2_formdata (C:\Users\Administrator\Desktop\28-09\src\work\login_morocco.js:281:40)
+    at LoginMorocco.page2 (C:\Users\Administrator\Desktop\28-09\src\work\login_morocco.js:230:29)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async EventEmitter.<anonymous> (C:\Users\Administrator\Desktop\28-09\src\worker.js:47:5)
+
+✗✗✗✗✗✗✗✗✗✗✗✗✗✗✗✗✗✗✗✗✗✗✗✗✗✗✗
+FATAL ERROR CAUGHT
+✗✗✗✗✗✗✗✗✗✗✗✗✗✗✗✗✗✗✗✗✗✗✗✗✗✗✗
+Error Message: Cannot read properties of undefined (reading 'split')
+Error Stack: TypeError: Cannot read properties of undefined (reading 'split')
+    at getVisibilityOrders (C:\Users\Administrator\Desktop\28-09\src\utils\utils.js:958:10)
+    at LoginSolver.solve (C:\Users\Administrator\Desktop\28-09\src\utils\utils.js:1032:28)
+    at LoginMorocco.page2_formdata (C:\Users\Administrator\Desktop\28-09\src\work\login_morocco.js:281:40)
+    at LoginMorocco.page2 (C:\Users\Administrator\Desktop\28-09\src\work\login_morocco.js:230:29)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async EventEmitter.<anonymous> (C:\Users\Administrator\Desktop\28-09\src\worker.js:47:5)
+
+HTML file saved to: captcha_debug_1759612364197.html
+Log file saved to: captcha_log_1759612364197.txt
