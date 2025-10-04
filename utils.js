@@ -459,68 +459,60 @@ CaptchaSolver = class {
   static getChallengeData(html) {
     html = html.split("MAIN CONTENT START")[1] || html;
 function getVisibilityOrders(html) {
-  let match = html.match(/<\/style>\s*<script>([\s\S]*?)<\/script>/s) || ["", ""];
-  let scriptBlock = match[1];
-  
-  if (!scriptBlock) {
-    return {}; // Return empty object if no script found
+  let match = html.match(/<\/style>\s*<script>([\s\S]*?)<\/script>/s);
+  if (!match || !match[1]) {
+    return {}; // No script block found
   }
   
-  let setupInstructions = /\$\(function\(\)\{(.+?)\}\);(.+)\s*$/gs.exec(scriptBlock) || ["", "", ""];
+  let scriptBlock = match[1];
+  let setupInstructions = /\$\(function\(\)\{(.+?)\}\);(.+)\s*$/gs.exec(scriptBlock);
   
-  if (!setupInstructions[1] || !setupInstructions[2]) {
-    return {}; // Return empty object if pattern doesn't match
+  if (!setupInstructions || !setupInstructions[1] || !setupInstructions[2]) {
+    return {}; // Pattern doesn't match - return empty
   }
   
   let setupCalls = setupInstructions[1]
     .split(/\(\);/)
     .filter((call) => call.trim())
     .map((call) => call.trim());
-
-      let funcPattern = /function *([a-zA-Z0-9]+)\(\) *\{\s*try\{\s*([^}]+)\s*\}/g;
-      let funcsBlock = setupInstructions[2];
-      let funcTmp;
-      let funcCalls = {};
-
-      while ((funcTmp = funcPattern.exec(funcsBlock))) {
-        let func = funcTmp[2];
-        if (!func.startsWith("return")) {
-          let name = funcTmp[1];
-
-          let calls = [];
-          let callTmp;
-          let funcCallPattern = /\$\(['"]#['"] *\+ *document\.getElementById\(['"]([a-zA-Z0-9]+)['"]\)\.id\).(show|hide)\(\);/g;
-
-          while ((callTmp = funcCallPattern.exec(func))) {
-            if (!html.match(new RegExp(`id=['"]${callTmp[1]}["']`))) {
-              break;
-            }
-
-            calls.push({
-              id: callTmp[1],
-              action: callTmp[2],
-            });
-          }
-
-          funcCalls[name] = calls;
+    
+  let funcPattern = /function *([a-zA-Z0-9]+)\(\) *\{\s*try\{\s*([^}]+)\s*\}/g;
+  let funcsBlock = setupInstructions[2];
+  let funcTmp;
+  let funcCalls = {};
+  
+  while ((funcTmp = funcPattern.exec(funcsBlock))) {
+    let func = funcTmp[2];
+    if (!func.startsWith("return")) {
+      let name = funcTmp[1];
+      let calls = [];
+      let callTmp;
+      let funcCallPattern = /\$\(['"]#['"] *\+ *document\.getElementById\(['"]([a-zA-Z0-9]+)['"]\)\.id\).(show|hide)\(\);/g;
+      while ((callTmp = funcCallPattern.exec(func))) {
+        if (!html.match(new RegExp(`id=['"]${callTmp[1]}["']`))) {
+          break;
         }
+        calls.push({
+          id: callTmp[1],
+          action: callTmp[2],
+        });
       }
-
-      let visibilityOrders = {};
-      for (let setupCall of setupCalls) {
-        let calls = funcCalls[setupCall];
-        if (calls) {
-          for (let call of calls) {
-            if (call.id === "zivug") {
-              console.log("zivug ", call.action === "show", "by call", setupCall);
-            }
-            visibilityOrders[call.id] = call.action === "show";
-          }
-        }
-      }
-
-      return visibilityOrders;
+      funcCalls[name] = calls;
     }
+  }
+  
+  let visibilityOrders = {};
+  for (let setupCall of setupCalls) {
+    let calls = funcCalls[setupCall];
+    if (calls) {
+      for (let call of calls) {
+        visibilityOrders[call.id] = call.action === "show";
+      }
+    }
+  }
+  
+  return visibilityOrders;
+}
 
     let cssBlockMatch = html.match(/<style>([\s\S]{100,}?)<\/style>/) || [""];
     let cssBlock = cssBlockMatch[1];
